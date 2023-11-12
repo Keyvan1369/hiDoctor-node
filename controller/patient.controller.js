@@ -1,9 +1,10 @@
 import ExpertiseModel from "../model/expertise.model.js";
+import userModel from "../model/user.model.js";
 import User, { ROLES } from "../model/user.model.js";
 
 export default class PatientController {
   async search(req, res) {
-    const { search ,limit} = req.query;
+    const { search, limit } = req.query;
     const doctors = await User.find({
       role: ROLES.DOCTOR,
       $or: [
@@ -11,7 +12,8 @@ export default class PatientController {
           fullName: {
             $regex: new RegExp(search, "i"),
           },
-        }, {
+        },
+        {
           username: {
             $regex: new RegExp(search, "i"),
           },
@@ -24,5 +26,11 @@ export default class PatientController {
       },
     }).limit(limit);
     res.send({ expertiseList, doctors });
+  }
+
+  async searchDoctorByExpertise(req, res) {
+    const { expertise } = req.params;
+    const users = await userModel.find({ role: ROLES.DOCTOR, "setting.expertise":expertise }).populate("setting.expertise");
+    res.send(users);
   }
 }

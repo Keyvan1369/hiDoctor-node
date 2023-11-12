@@ -7,7 +7,7 @@ export const ROLES = {
 
 const schema = new Schema({
     username: {type: String, unique: true, required: true},
-    password: {type: String, unique: true},
+    password: {type: String, required: true},
     fullName: {type: String, required: true},
     role: {type: String, enum: [ROLES.PATIENT, ROLES.DOCTOR], default: ROLES.PATIENT, required: true},
     setting: {
