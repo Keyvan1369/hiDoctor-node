@@ -23,7 +23,7 @@ export default class AuthController {
         // else create token and send to user
         const token = jwt.sign({
             userId: user._id, role: user.role
-        }, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24})
+        }, process.env.JWT_SECRET)
 
 
         res.send({token, message: "success", user})
@@ -31,8 +31,8 @@ export default class AuthController {
 
     async register(req, res) {
         // get username , password , fullname from body
-        const {username, password, fullName} = req.body
-        if (!username || !password || !fullName) return res.status(400).send({message: "all fields required"})
+        const {username, password, fullName,role} = req.body
+        if (!username || !password || !fullName || !role) return res.status(400).send({message: "all fields required"})
         // check username exists in db or not
         let user = await UserModel.findOne({username: username,})
 

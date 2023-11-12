@@ -9,7 +9,6 @@ const controller = new AppointmentTimeController();
 
 router.get("/:date",auth,role(ROLES.DOCTOR), controller.getAll)
 router.post("/",auth,role(ROLES.DOCTOR), controller.create);
-router.delete("/:id",auth,role(ROLES.DOCTOR), controller.delete);
 
 
 export default router;

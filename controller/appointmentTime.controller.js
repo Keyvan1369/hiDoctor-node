@@ -3,7 +3,8 @@ import AppointmentTime from '../model/appointmentTime.model.js'
 export default class AppointmentTimeController {
     async getAll(req, res) {
         const {date} = req.params;
-        const result = await AppointmentTime.find({date})
+        const doctor = req.user.userId;
+        const result = await AppointmentTime.find({date,doctor})
         res.send(result)
     }
 
@@ -50,12 +51,5 @@ export default class AppointmentTimeController {
         // })
     }
 
-    async delete(req, res) {
-        const {id} = req.params;
-        const isRemoved = await AppointmentTime.findOneAndDelete(id)
-        if (isRemoved)
-            return res.status(400).send({message: "time is not found"})
 
-        res.send(isRemoved)
-    }
 }
