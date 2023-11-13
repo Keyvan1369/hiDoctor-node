@@ -15,8 +15,8 @@ app.use("/api", router)
 
 mongoose.connect(process.env.DB_ADDRESS).then(() => {
     console.log("db connected")
-    // seedExpertise()
-    // seedDoctors(100)
+  
+    // seedData()
     app.listen(process.env.PORT, () => {
         console.log(`app listen to port ${process.env.PORT}`)
     })
@@ -24,6 +24,10 @@ mongoose.connect(process.env.DB_ADDRESS).then(() => {
     console.log(err)
 })
 
+function seedData(){
+  // seedExpertise()
+    // seedDoctors(200)
+}
 
 
 

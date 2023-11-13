@@ -16,6 +16,10 @@ const schema = new Schema({
         dayEndTime: String,
         image: String,
         active: Boolean,
+        location : {
+            lat : Number,
+            lng : Number
+        },
         expertise: {
             type: Schema.Types.ObjectId,
             ref: "expertise"
