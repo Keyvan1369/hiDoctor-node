@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import ExpertiseModel from "./model/expertise.model.js";
 import userModel, { ROLES } from "./model/user.model.js";
+import bcrypt from "bcrypt";
 
 export function seedExpertise() {
   return ExpertiseModel.create(
@@ -45,12 +46,13 @@ export async function seedDoctors(count = 20) {
   const expertiseList = (await ExpertiseModel.find().lean()).map(
     (item) => item._id
   );
-
+  const hashPassword = await bcrypt.hash("1234", 10);
   for (let index = 0; index < count; index++) {
+    const username = faker.person.firstName();
     const doctor = {
-      username: faker.person.firstName(),
-      password: "1234",
-      fullName: faker.person.fullName(),
+      username: username,
+      password: hashPassword,
+      fullName: faker.person.fullName({firstName : username}),
       role: ROLES.DOCTOR,
       setting: {
         appointmentTime: randomItemIn([10, 15, 20]),
@@ -58,12 +60,14 @@ export async function seedDoctors(count = 20) {
         dayEndTime: "12:00",
         active: true,
         location: {
-          lat: randomNumber(52461239, 52558612) / Math.pow(10,6),
-          lng: randomNumber(13298264,13617039) / Math.pow(10,6),
+          lat: randomNumber(52461239, 52558612) / Math.pow(10, 6),
+          lng: randomNumber(13298264, 13617039) / Math.pow(10, 6),
         },
         expertise: randomItemIn(expertiseList),
       },
     };
-    await userModel.create(doctor);
+    try {
+      await userModel.create(doctor);
+    } catch (err) {}
   }
 }

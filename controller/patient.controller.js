@@ -1,5 +1,5 @@
+import appointmentTimeModel from "../model/appointmentTime.model.js";
 import ExpertiseModel from "../model/expertise.model.js";
-import userModel from "../model/user.model.js";
 import User, { ROLES } from "../model/user.model.js";
 
 export default class PatientController {
@@ -7,6 +7,7 @@ export default class PatientController {
     const { search, limit } = req.query;
     const doctors = await User.find({
       role: ROLES.DOCTOR,
+      "setting.active": true,
       $or: [
         {
           fullName: {
@@ -30,7 +31,33 @@ export default class PatientController {
 
   async searchDoctorByExpertise(req, res) {
     const { expertise } = req.params;
-    const users = await userModel.find({ role: ROLES.DOCTOR, "setting.expertise":expertise }).populate("setting.expertise");
+    const users = await userModel
+      .find({
+        role: ROLES.DOCTOR,
+        "setting.expertise": expertise,
+        "setting.active": true,
+      })
+      .populate("setting.expertise");
     res.send(users);
+  }
+
+  async getDoctorDetail(req, res) {
+    const { id } = req.params;
+    const doctor = await User.findById(id).populate("setting.expertise");
+
+    res.send(doctor);
+  }
+
+  async getDoctorTimes(req, res) {
+    const { date } = req.query;
+    const { id: doctorId } = req.params;
+    const doctor = await User.findById(doctorId);
+    if (!doctor) return res.status(400).send({ message: "Doctor not found" });
+
+    const times = await appointmentTimeModel
+      .find({ date, doctor: doctorId })
+      .lean();
+
+    res.send(times);
   }
 }
