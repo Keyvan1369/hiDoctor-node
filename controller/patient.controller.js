@@ -1,3 +1,4 @@
+import appointmentModel from "../model/appointment.model.js";
 import appointmentTimeModel from "../model/appointmentTime.model.js";
 import ExpertiseModel from "../model/expertise.model.js";
 import User, { ROLES } from "../model/user.model.js";
@@ -31,7 +32,7 @@ export default class PatientController {
 
   async searchDoctorByExpertise(req, res) {
     const { expertise } = req.params;
-    const users = await userModel
+    const users = await User
       .find({
         role: ROLES.DOCTOR,
         "setting.expertise": expertise,
@@ -58,6 +59,19 @@ export default class PatientController {
       .find({ date, doctor: doctorId })
       .lean();
 
-    res.send(times);
+    const appointments = await appointmentModel
+      .find({ date, doctor: doctorId })
+      .lean();
+
+    const freeTimes = times.map((time) => {
+      return {
+        ...time,
+        free: !appointments.some(
+          (item) => item.appointment.toString() === time._id.toString()
+        ),
+      };
+    });
+
+    res.send(freeTimes);
   }
 }
