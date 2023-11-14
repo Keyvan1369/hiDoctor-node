@@ -30,4 +30,12 @@ export default class AppointmentController {
       console.log(err);
     }
   }
+
+  async readAll(req, res) {
+    const {date} = req.params;
+    const doctor = req.user.userId;
+    const appointments = await Appointment.find({date,doctor}).populate("patient");
+    res.send(appointments)
+
+  }
 }

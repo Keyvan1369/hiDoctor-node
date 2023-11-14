@@ -67,6 +67,7 @@ export default class AuthController {
             image: settings.image,
             expertise: settings.expertise,
             active: true,
+            location: settings.location,
         }
 
         await doctor.save()
@@ -76,6 +77,7 @@ export default class AuthController {
     }
 
     async getProfile(req, res) {
+        
         const user = await UserModel.findById(req.user.userId);
         if (!user) return res.status(400).send({message: "user not found"})
         return res.send(user)

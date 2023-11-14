@@ -8,6 +8,7 @@ const router = Router()
 const controller = new AppointmentController();
 
 router.post("/",auth,role(ROLES.PATIENT), controller.create);
+router.get("/:date",auth,role(ROLES.DOCTOR), controller.readAll);
 
 
 export default router;
