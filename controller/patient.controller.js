@@ -32,13 +32,11 @@ export default class PatientController {
 
   async searchDoctorByExpertise(req, res) {
     const { expertise } = req.params;
-    const users = await User
-      .find({
-        role: ROLES.DOCTOR,
-        "setting.expertise": expertise,
-        "setting.active": true,
-      })
-      .populate("setting.expertise");
+    const users = await User.find({
+      role: ROLES.DOCTOR,
+      "setting.expertise": expertise,
+      "setting.active": true,
+    }).populate("setting.expertise");
     res.send(users);
   }
 
@@ -73,5 +71,14 @@ export default class PatientController {
     });
 
     res.send(freeTimes);
+  }
+
+  async getAppointments(req, res) {
+    const patient = req.user.userId;
+    const { date } = req.params;
+    const appointments = await appointmentModel
+      .find({ patient, date })
+      .populate("doctor");
+    res.send(appointments);
   }
 }

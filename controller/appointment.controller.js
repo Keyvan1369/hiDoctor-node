@@ -1,5 +1,4 @@
 import Appointment from "../model/appointment.model.js";
-import appointmentTimeModel from "../model/appointmentTime.model.js";
 import { appointmentSchema } from "../validation/appointment.validation.js";
 
 export default class AppointmentController {
@@ -36,6 +35,5 @@ export default class AppointmentController {
     const doctor = req.user.userId;
     const appointments = await Appointment.find({date,doctor}).populate("patient");
     res.send(appointments)
-
   }
 }
