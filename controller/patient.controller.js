@@ -5,7 +5,8 @@ import User, { ROLES } from "../model/user.model.js";
 
 export default class PatientController {
   async search(req, res) {
-    const { search, limit } = req.query;
+    const { search, } = req.query;
+    const limit = req.query.limit || 10;
     const doctors = await User.find({
       role: ROLES.DOCTOR,
       "setting.active": true,
