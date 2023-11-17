@@ -50,7 +50,7 @@ export async function seedDoctors(count = 20) {
   for (let index = 0; index < count; index++) {
     const username = faker.person.firstName();
     const doctor = {
-      username: username,
+            username: username,
       password: hashPassword,
       fullName: faker.person.fullName({firstName : username}),
       role: ROLES.DOCTOR,
